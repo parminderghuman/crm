@@ -33,3 +33,11 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./build/crm-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling#building-a-native-executable.
+
+
+to generate  private key
+
+`openssl req -newkey rsa:2048 -new -nodes -keyout privatekey.pem -out csr.pem`
+Public key
+
+`openssl rsa -in privatekey.pem -pubout > publickey.pem`
