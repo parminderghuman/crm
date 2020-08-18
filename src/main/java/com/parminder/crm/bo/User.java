@@ -23,6 +23,6 @@ public class User extends Generic {
 
 	String role;
 
-	Set<Role> roles;
+	Set<String> roles;
 
 }

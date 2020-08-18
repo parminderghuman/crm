@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class TokenUtils {
-	public static String generateToken(String username, Set<Role> roles, Long duration, String issuer) throws Exception {
+	public static String generateToken(String username, Set<String> roles, Long duration, String issuer) throws Exception {
 		String privateKeyLocation = "/privatekey.pem";
 		PrivateKey privateKey = readPrivateKey(privateKeyLocation);
 		
@@ -25,7 +25,7 @@ public class TokenUtils {
 		long currentTimeInSecs = currentTimeInSecs();
 		
 		Set<String> groups = new HashSet<>();
-		for (Role role : roles) groups.add(role.getName());
+		for (String role : roles) groups.add(role);
 
 		claimsBuilder.issuer(issuer);
 		claimsBuilder.subject(username);

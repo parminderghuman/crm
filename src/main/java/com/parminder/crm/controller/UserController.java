@@ -64,7 +64,7 @@ public class UserController {
 
 			user = userService.getUserByUserName(authrequest.getUsername());
 
-			if (user != null || user.getPassword().equals(pBKDF2Encoder.encode(authrequest.getPassword()))) {
+			if (user != null && user.getPassword().equals(pBKDF2Encoder.encode(authrequest.getPassword()))) {
 				try {
 					return Response
 							.ok(new AuthResponse(
@@ -76,7 +76,7 @@ public class UserController {
 
 				}
 			} else {
-				return Response.status(Status.UNAUTHORIZED).build();
+				return Response.status(Status.UNAUTHORIZED).entity("Invalid Credentials!").build();
 
 			}
 		} catch (InterruptedException | ExecutionException e1) {
