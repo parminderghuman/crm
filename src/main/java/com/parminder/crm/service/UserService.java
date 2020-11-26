@@ -10,6 +10,7 @@ import com.parminder.crm.bo.User;
 import com.parminder.crm.repository.UserRepository;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import io.quarkus.mongodb.reactive.ReactiveMongoClient;
 import io.quarkus.mongodb.reactive.ReactiveMongoCollection;
@@ -20,9 +21,7 @@ public class UserService {
 	
 	@Inject UserRepository userRepository;
 	
-	public User getUserById(Long id){
-		return null;
-	}
+
 
 	public User saveUser(User user) {
 		return userRepository.addUser(user);
@@ -31,5 +30,16 @@ public class UserService {
 	public User getUserByUserName(String userName) throws InterruptedException, ExecutionException {
 		return userRepository.findByUserName(userName).subscribeAsCompletionStage().get();
 		
+	}
+
+	public User findById(String id) throws InterruptedException, ExecutionException {
+		// TODO Auto-generated method stub
+		//userRepository.findByIdOptional(id);
+		return userRepository.findByIdOptional(new ObjectId(id)).subscribeAsCompletionStage().get().get();
+	}
+
+	public Long count() throws InterruptedException, ExecutionException {
+		// TODO Auto-generated method stub
+		return userRepository.count().subscribeAsCompletionStage().get();
 	}
 }

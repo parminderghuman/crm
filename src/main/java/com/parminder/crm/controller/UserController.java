@@ -1,12 +1,16 @@
 package com.parminder.crm.controller;
 
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,6 +26,8 @@ import com.parminder.crm.service.utils.PBKDF2Encoder;
 import com.parminder.crm.service.utils.TokenUtils;
 
 @Path("/user")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserController {
 
 	@Inject
@@ -34,6 +40,34 @@ public class UserController {
 	public Long duration;
 	@ConfigProperty(name = "mp.jwt.verify.issuer")
 	public String issuer;
+	long count = 0;
+
+	@GET
+	@Path("/admin/count")
+	public Response checkAdminUser() {
+		HashMap<String, Boolean> result = new HashMap<String, Boolean>();
+		try {
+			if (count > 0) {
+				result.put("isAdmin", true);
+
+			} else {
+
+				count = userService.count();
+				if (count > 0) {
+					result.put("isAdmin", true);
+
+				} else {
+					result.put("isAdmin", false);
+				}
+			}
+
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
+		return Response.ok(result).build();
+	}
 
 	@POST
 	public Response saveUser(User user) {
@@ -49,6 +83,20 @@ public class UserController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Response.serverError().build();
+		}
+		return Response.ok(user).build();
+	}
+
+	@GET
+	@Path("/{id}")
+	@RolesAllowed({ "User", "Admin" })
+
+	public Response get(@org.jboss.resteasy.annotations.jaxrs.PathParam String id) {
+		User user;
+		try {
+			user = userService.findById(id);
+		} catch (InterruptedException | ExecutionException e) {
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
 		return Response.ok(user).build();
 	}

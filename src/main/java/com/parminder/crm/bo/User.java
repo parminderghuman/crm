@@ -24,5 +24,7 @@ public class User extends Generic {
 	String role;
 
 	Set<String> roles;
+	
+	String projectId;
 
 }

@@ -14,8 +14,8 @@ import io.smallrye.mutiny.Uni;
 @ApplicationScoped
 public class UserRepository implements ReactivePanacheMongoRepositoryBase<User,Integer>{
 	
-	public Uni<User> findById(Integer id) {
-		return find("id",id).firstResult();
+	public Uni<User> findById(String id) {
+		return find("_id",id).firstResult();
 	}
 	
 	public Uni<User> findByUserName(String  username) {
